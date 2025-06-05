@@ -5,34 +5,52 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
 
     <EditText
         android:id="@+id/emailID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="89dp"
+        android:layout_marginTop="315dp"
+        android:layout_marginEnd="112dp"
+        android:layout_marginBottom="31dp"
         android:ems="10"
         android:hint="Email Id"
         android:inputType="textEmailAddress"
-        tools:layout_editor_absoluteX="89dp"
-        tools:layout_editor_absoluteY="315dp" />
+        app:layout_constraintBottom_toTopOf="@+id/pat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/pat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="93dp"
+        android:layout_marginTop="31dp"
+        android:layout_marginEnd="108dp"
+        android:layout_marginBottom="55dp"
         android:ems="10"
         android:hint="Personal Acess Token"
         android:inputType="text"
-        tools:layout_editor_absoluteX="93dp"
-        tools:layout_editor_absoluteY="391dp" />
+        app:layout_constraintBottom_toTopOf="@+id/loginButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailID" />
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="142dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="181dp"
+        android:layout_marginBottom="176dp"
         android:text="Login"
-        tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="491dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pat" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
