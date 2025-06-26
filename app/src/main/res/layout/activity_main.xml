@@ -40,27 +40,65 @@
 
     <ImageButton
         android:id="@+id/gitlabLogoImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="162dp"
+        android:layout_height="135dp"
         android:layout_marginStart="22dp"
         android:layout_marginBottom="215dp"
+        android:padding="20dp"
+        android:scaleType="fitCenter"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/githubLogoImageButton"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/platformInfoTextView"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/gitlab_logo" />
+
 
     <ImageButton
         android:id="@+id/githubLogoImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="162dp"
+        android:layout_height="135dp"
         android:layout_marginStart="29dp"
         android:layout_marginEnd="56dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="20dp"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/gitlabLogoImageButton"
         app:layout_constraintTop_toBottomOf="@+id/platformInfoTextView"
         app:layout_constraintVertical_bias="0.476"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/github_logo" />
+
+    <TextView
+        android:id="@+id/gitlabTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="GitLab"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/gitlabLogoImageButton"
+        app:layout_constraintHorizontal_bias="0.546"
+        app:layout_constraintStart_toStartOf="@+id/gitlabLogoImageButton"
+        app:layout_constraintTop_toBottomOf="@+id/gitlabLogoImageButton"
+        app:layout_constraintVertical_bias="0.004" />
+
+    <TextView
+        android:id="@+id/githubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="GitHub"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/githubLogoImageButton"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="@+id/githubLogoImageButton"
+        app:layout_constraintTop_toBottomOf="@+id/githubLogoImageButton"
+        app:layout_constraintVertical_bias="0.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

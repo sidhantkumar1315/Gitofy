@@ -15,13 +15,15 @@
         android:layout_marginTop="35dp"
         android:layout_marginEnd="111dp"
         android:layout_marginBottom="621dp"
+        android:textSize="20dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/PATtextView"
+        android:id="@+id/PATEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -43,7 +45,7 @@
         android:layout_marginTop="26dp"
         android:layout_marginEnd="37dp"
         android:layout_marginBottom="328dp"
-        app:layout_constraintBottom_toTopOf="@+id/PATtextView"
+        app:layout_constraintBottom_toTopOf="@+id/PATEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginTextView" />
@@ -56,14 +58,14 @@
         android:layout_marginTop="59dp"
         android:layout_marginEnd="97dp"
         android:layout_marginBottom="102dp"
-        app:layout_constraintBottom_toTopOf="@+id/PATtextView"
+        app:layout_constraintBottom_toTopOf="@+id/PATEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/instructionTextView"
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button
-        android:id="@+id/loginSubmitButton"
+        android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="155dp"
@@ -74,6 +76,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PATtextView" />
+        app:layout_constraintTop_toBottomOf="@+id/PATEditText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

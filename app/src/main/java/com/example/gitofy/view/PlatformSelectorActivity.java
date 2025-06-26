@@ -30,6 +30,7 @@ public class PlatformSelectorActivity extends AppCompatActivity {
         });
 
         initialize();
+        setChosenPlatform();
     }
 
 
