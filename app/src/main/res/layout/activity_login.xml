@@ -7,4 +7,59 @@
     android:layout_height="match_parent"
     tools:context=".view.LoginActivity">
 
+    <TextView
+        android:id="@+id/loginTextView"
+        android:layout_width="189dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="111dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="111dp"
+        android:layout_marginBottom="621dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/PATtextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="101dp"
+        android:layout_marginBottom="188dp"
+        android:ems="10"
+        android:hint="Personal Access Token"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instructionTextView" />
+
+    <TextView
+        android:id="@+id/instructionTextView"
+        android:layout_width="338dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="37dp"
+        android:layout_marginBottom="328dp"
+        app:layout_constraintBottom_toTopOf="@+id/PATtextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginTextView" />
+
+    <ImageView
+        android:id="@+id/platformImageView"
+        android:layout_width="203dp"
+        android:layout_height="167dp"
+        android:layout_marginStart="111dp"
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="97dp"
+        android:layout_marginBottom="102dp"
+        app:layout_constraintBottom_toTopOf="@+id/PATtextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instructionTextView"
+        tools:srcCompat="@tools:sample/avatars" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
