@@ -7,50 +7,60 @@
     android:layout_height="match_parent"
     tools:context=".view.PlatformSelectorActivity">
 
-    <EditText
-        android:id="@+id/emailID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="89dp"
-        android:layout_marginTop="315dp"
-        android:layout_marginEnd="112dp"
-        android:layout_marginBottom="31dp"
-        android:ems="10"
-        android:hint="Email Id"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/pat"
+
+    <TextView
+        android:id="@+id/platformSelectionTextView"
+        android:layout_width="283dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="87dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="88dp"
+        android:text="Choose Your Platform "
+        android:textSize="26dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/platformInfoTextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/pat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="93dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="108dp"
-        android:layout_marginBottom="55dp"
-        android:ems="10"
-        android:hint="Personal Acess Token"
-        android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/loginButton"
+    <TextView
+        android:id="@+id/platformInfoTextView"
+        android:layout_width="362dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="189dp"
+        android:text="Please select one of the following git platform to continue"
+        app:layout_constraintBottom_toTopOf="@+id/gitlabLogoImageButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailID" />
+        app:layout_constraintTop_toBottomOf="@+id/platformSelectionTextView" />
 
-    <Button
-        android:id="@+id/loginButton"
+    <ImageButton
+        android:id="@+id/gitlabLogoImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="142dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="181dp"
-        android:layout_marginBottom="176dp"
-        android:text="Login"
+        android:layout_marginStart="22dp"
+        android:layout_marginBottom="215dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/githubLogoImageButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/platformInfoTextView"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageButton
+        android:id="@+id/githubLogoImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="29dp"
+        android:layout_marginEnd="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pat" />
-
+        app:layout_constraintStart_toEndOf="@+id/gitlabLogoImageButton"
+        app:layout_constraintTop_toBottomOf="@+id/platformInfoTextView"
+        app:layout_constraintVertical_bias="0.476"
+        tools:srcCompat="@tools:sample/avatars" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,10 @@
 package com.example.gitofy.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,8 +16,7 @@ import com.example.gitofy.R;
 
 public class PlatformSelectorActivity extends AppCompatActivity {
 
-    EditText email, PAT;
-    Button login;
+    ImageButton gitlabButton, githubButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +34,23 @@ public class PlatformSelectorActivity extends AppCompatActivity {
 
 
     public void initialize(){
-        email = findViewById(R.id.emailID);
-        PAT = findViewById(R.id.pat);
-        login = findViewById(R.id.loginButton);
+        gitlabButton = findViewById(R.id.gitlabLogoImageButton);
+        githubButton = findViewById(R.id.githubLogoImageButton);
     }
+
+    public void setChosenPlatform(){
+        gitlabButton.setOnClickListener(v -> {
+            moveToSelectedPlatformLogin("gitlab");
+        });
+
+        githubButton.setOnClickListener(v -> {
+            moveToSelectedPlatformLogin("github");
+        });
+    }
+    public void moveToSelectedPlatformLogin(String platform){
+        Intent intent = new Intent(PlatformSelectorActivity.this, LoginActivity.class);
+        intent.putExtra("chosenPlatform", platform);
+        startActivity(intent);
+    }
+
 }
