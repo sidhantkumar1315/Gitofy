@@ -45,7 +45,8 @@ public class PlatformSelectorActivity extends AppCompatActivity {
         });
 
         githubButton.setOnClickListener(v -> {
-            moveToSelectedPlatformLogin("github");
+            Intent intent = new Intent(this, WebViewActivity.class);
+            startActivity(intent);
         });
     }
     public void moveToSelectedPlatformLogin(String platform){
