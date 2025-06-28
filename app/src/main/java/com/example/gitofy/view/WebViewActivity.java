@@ -42,7 +42,7 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
 
-        String authUrl = "https://github.com";
+        String authUrl = "https://github.com/login/oauth/authorize?client_id=Ov23lish7hRvDchbveEI&scope=read:user";
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         webView.clearCache(true);
