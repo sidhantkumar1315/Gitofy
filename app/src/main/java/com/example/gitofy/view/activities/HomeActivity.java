@@ -29,8 +29,6 @@ public class HomeActivity extends AppCompatActivity {
 
         repoRecyclerView = findViewById(R.id.repoRecyclerView);
         repoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        String reposJson = getIntent().getStringExtra("repos_json");
         SharedPreferences prefs = this.getSharedPreferences("auth", Context.MODE_PRIVATE);
         String token = prefs.getString("token", null);
         GitHubService gitHubService = new GitHubService();
@@ -50,12 +48,11 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-    private void repoArray(JSONArray reposJson){
+    private void repoArray(JSONArray reposJson) {
         try {
-            JSONArray repoArray = new JSONArray(reposJson);
             List<JSONObject> repoList = new ArrayList<>();
-            for (int i = 0; i < repoArray.length(); i++) {
-                repoList.add(repoArray.getJSONObject(i));
+            for (int i = 0; i < reposJson.length(); i++) {
+                repoList.add(reposJson.getJSONObject(i));
             }
 
             RepoAdapter adapter = new RepoAdapter(repoList);

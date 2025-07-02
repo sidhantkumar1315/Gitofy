@@ -68,6 +68,9 @@ public class OAuthCallbackActivity extends AppCompatActivity {
                 String token = obj.getString("access_token");
                 SharedPreferences prefs = this.getSharedPreferences("auth", MODE_PRIVATE);
                 prefs.edit().putString("token", token).apply();
+                Intent intent = new Intent(this, HomeActivity.class);
+                startActivity(intent);
+                finish();
             } catch (Exception e) {
                 e.printStackTrace();
                 finish();
