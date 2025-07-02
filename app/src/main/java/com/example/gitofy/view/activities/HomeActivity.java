@@ -38,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onSuccess(JSONArray repos) {
                 // Use this list in your RecyclerView
                 runOnUiThread(() -> {
-                    repoArray(repos);
+                    repodisplay(repos);
                 });
             }
 
@@ -48,7 +48,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-    private void repoArray(JSONArray reposJson) {
+    private void repodisplay(JSONArray reposJson) {
         try {
             List<JSONObject> repoList = new ArrayList<>();
             for (int i = 0; i < reposJson.length(); i++) {

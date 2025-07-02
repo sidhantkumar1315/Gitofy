@@ -52,7 +52,7 @@ public class PlatformSelectorActivity extends AppCompatActivity {
                     "&scope=repo";
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl));
-            startActivity(intent); // Open GitHub OAuth in browser
+            startActivity(intent);
         });
     }
 

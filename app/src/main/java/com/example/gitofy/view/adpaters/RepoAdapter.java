@@ -21,12 +21,11 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
     }
 
     public static class RepoViewHolder extends RecyclerView.ViewHolder {
-        TextView repoName, repoDesc;
+        TextView repoName;
 
         public RepoViewHolder(View itemView) {
             super(itemView);
             repoName = itemView.findViewById(R.id.repoName);
-            repoDesc = itemView.findViewById(R.id.repoDesc);
         }
     }
 
@@ -41,7 +40,6 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
     public void onBindViewHolder(RepoViewHolder holder, int position) {
         JSONObject repo = repoList.get(position);
         holder.repoName.setText(repo.optString("name"));
-        holder.repoDesc.setText(repo.optString("description", "No description"));
     }
 
     @Override
