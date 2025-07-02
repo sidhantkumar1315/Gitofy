@@ -13,18 +13,20 @@
         android:theme="@style/Theme.Gitofy"
         tools:targetApi="31">
 
-        <activity android:name=".view.LoginActivity" />
-        <activity android:name=".view.WebViewActivity" />
 
+
+    <activity android:name=".view.activities.HomeActivity"
+        android:exported="true"
+        ></activity>
         <activity
-            android:name=".view.PlatformSelectorActivity"
+            android:name=".view.activities.PlatformSelectorActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.OAuthCallbackActivity"
+        <activity android:name=".view.activities.OAuthCallbackActivity"
             android:exported="true">
             <intent-filter android:label="GitHub OAuth Callback">
                 <action android:name="android.intent.action.VIEW" />

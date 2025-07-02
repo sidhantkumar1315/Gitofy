@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Gitofy</string>
+    <string name="avatar">String</string>
 </resources>

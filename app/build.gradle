@@ -37,4 +37,9 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    // OkHttp for HTTP calls
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+
+// (If you want the logging interceptor for debugging)
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 }
