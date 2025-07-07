@@ -3,6 +3,7 @@ package com.example.gitofy.view.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,8 +66,13 @@ public class ReposFragment extends Fragment {
         try {
             List<JSONObject> repoList = new ArrayList<>();
             for (int i = 0; i < reposJson.length(); i++) {
-                repoList.add(reposJson.getJSONObject(i));
+                JSONObject repo = reposJson.getJSONObject(i);
+                JSONObject owner = repo.getJSONObject("owner");
+                String ownerLogin = owner.getString("login");
+                Log.d("RepoOwner", "Owner: " + ownerLogin );
+                repoList.add(repo); // If you're still passing the whole repo object to the adapter
             }
+
 
             RepoAdapter adapter = new RepoAdapter(repoList);
             repoRecyclerView.setAdapter(adapter);
