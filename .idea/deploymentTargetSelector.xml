@@ -8,9 +8,6 @@
       <SelectionState runConfigName="PlatformSelectorActivity (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="OAuthCallbackActivity">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="WebViewActivity (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -18,6 +15,9 @@
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="PlatformSelectorActivity">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="PlatformSelectorActivity (2)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
