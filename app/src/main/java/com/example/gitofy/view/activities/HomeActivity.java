@@ -3,42 +3,108 @@ package com.example.gitofy.view.activities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Toast;
-
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import com.example.gitofy.R;
-import com.example.gitofy.view.adpaters.RepoAdapter;
+import com.example.gitofy.view.fragments.ReposFragment;
+import com.example.gitofy.view.fragments.WelcomeFragment;
 import com.example.gitofy.view.util.GitHubService;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class HomeActivity extends AppCompatActivity {
-    RecyclerView repoRecyclerView;
+
+    private TextView userNameText;
+    private LinearLayout navRepos, navRecent, navWatched;
+    private LinearLayout currentSelected = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        repoRecyclerView = findViewById(R.id.repoRecyclerView);
-        repoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        SharedPreferences prefs = this.getSharedPreferences("auth", Context.MODE_PRIVATE);
-        String token = prefs.getString("token", null);
-        GitHubService gitHubService = new GitHubService();
+        userNameText = findViewById(R.id.userName);
+        navRepos = findViewById(R.id.nav_repos);
+        navRecent = findViewById(R.id.nav_recent);
+        navWatched = findViewById(R.id.nav_watched);
 
-        gitHubService.fetchRepos(token, new GitHubService.ReposCallback() {
+        setupBottomNavigation();
+        loadUserInfo();
+
+        // Load welcome fragment by default (no selection)
+        loadFragment(new WelcomeFragment());
+    }
+
+    private void setupBottomNavigation() {
+        navRepos.setOnClickListener(v -> {
+            selectNavItem(navRepos);
+            loadFragment(new ReposFragment());
+        });
+
+//        navRecent.setOnClickListener(v -> {
+//            selectNavItem(navRecent);
+//            loadFragment(new RecentCommitsFragment());
+//        });
+//
+//        navWatched.setOnClickListener(v -> {
+//            selectNavItem(navWatched);
+//            loadFragment(new WatchedCommitsFragment());
+//        });
+    }
+
+    private void selectNavItem(LinearLayout selected) {
+        // Reset all items
+        resetNavItem(navRepos);
+        resetNavItem(navRecent);
+        resetNavItem(navWatched);
+
+        // Highlight selected item
+        selected.setSelected(true);
+        ImageView icon = (ImageView) selected.getChildAt(0);
+        TextView text = (TextView) selected.getChildAt(1);
+
+        int primaryColor = ContextCompat.getColor(this, R.color.colorPrimary);
+        icon.setColorFilter(primaryColor);
+        text.setTextColor(primaryColor);
+
+        currentSelected = selected;
+    }
+
+    private void resetNavItem(LinearLayout item) {
+        item.setSelected(false);
+        ImageView icon = (ImageView) item.getChildAt(0);
+        TextView text = (TextView) item.getChildAt(1);
+
+        int grayColor = ContextCompat.getColor(this, android.R.color.darker_gray);
+        icon.setColorFilter(grayColor);
+        text.setTextColor(grayColor);
+    }
+
+    private boolean loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .commit();
+            return true;
+        }
+        return false;
+    }
+
+    private void loadUserInfo() {
+        SharedPreferences prefs = getSharedPreferences("auth", Context.MODE_PRIVATE);
+        String token = prefs.getString("token", null);
+
+        GitHubService gitHubService = new GitHubService();
+        gitHubService.fetchUser(token, new GitHubService.UserCallback() {
             @Override
-            public void onSuccess(JSONArray repos) {
-                // Use this list in your RecyclerView
+            public void onSuccess(JSONObject user) {
                 runOnUiThread(() -> {
-                    repodisplay(repos);
+                    String name = user.optString("name", user.optString("login"));
+                    userNameText.setText(name);
                 });
             }
 
@@ -48,20 +114,4 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-    private void repodisplay(JSONArray reposJson) {
-        try {
-            List<JSONObject> repoList = new ArrayList<>();
-            for (int i = 0; i < reposJson.length(); i++) {
-                repoList.add(reposJson.getJSONObject(i));
-            }
-
-            RepoAdapter adapter = new RepoAdapter(repoList);
-            repoRecyclerView.setAdapter(adapter);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Failed to load repos", Toast.LENGTH_SHORT).show();
-        }
-    }
 }
-
-
