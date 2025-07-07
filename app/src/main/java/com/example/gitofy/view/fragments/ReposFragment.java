@@ -69,7 +69,7 @@ public class ReposFragment extends Fragment {
                 JSONObject repo = reposJson.getJSONObject(i);
                 JSONObject owner = repo.getJSONObject("owner");
                 String ownerLogin = owner.getString("login");
-                Log.d("RepoOwner", "Owner: " + ownerLogin );
+                Log.d("RepoOwner",  ownerLogin );
                 repoList.add(repo); // If you're still passing the whole repo object to the adapter
             }
 

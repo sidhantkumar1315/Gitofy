@@ -5,15 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/ownerAvatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="12dp"
-        android:scaleType="centerCrop"
-        android:background="@drawable/avatar_placeholder"
-        android:contentDescription="Owner Avatar" />
-
+    <!-- Repo Info on Left -->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
@@ -29,9 +21,37 @@
             android:text="Repository Name" />
 
         <TextView
+            android:id="@+id/repoLanguage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Language: Java"
+            android:textSize="14sp"
+            android:textColor="#666666" />
+    </LinearLayout>
+
+    <!-- Avatar and Owner Info on Right -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end">
+
+        <ImageView
+            android:id="@+id/ownerAvatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Owner Avatar"
+            android:background="@drawable/avatar_placeholder" />
+
+        <TextView
             android:id="@+id/repoOwner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Owner Info" />
+            android:text="Owner: rajveer"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="12dp" />
     </LinearLayout>
 </LinearLayout>
