@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.example.gitofy.R;
+import com.example.gitofy.view.fragments.RecentCommitsFragment;
 import com.example.gitofy.view.fragments.ReposFragment;
 import com.example.gitofy.view.fragments.WelcomeFragment;
 import com.example.gitofy.view.util.GitHubService;
@@ -44,10 +45,10 @@ public class HomeActivity extends AppCompatActivity {
             loadFragment(new ReposFragment());
         });
 
-//        navRecent.setOnClickListener(v -> {
-//            selectNavItem(navRecent);
-//            loadFragment(new RecentCommitsFragment());
-//        });
+        navRecent.setOnClickListener(v -> {
+            selectNavItem(navRecent);
+            loadFragment(new RecentCommitsFragment());
+        });
 //
 //        navWatched.setOnClickListener(v -> {
 //            selectNavItem(navWatched);
