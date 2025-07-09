@@ -1,11 +1,13 @@
 package com.example.gitofy.view.adpaters;
 
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.gitofy.R;
+import com.example.gitofy.view.util.BranchColorManager;
 import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,10 +18,12 @@ import java.util.TimeZone;
 public class CommitAdapter extends RecyclerView.Adapter<CommitAdapter.CommitViewHolder> {
     private final List<JSONObject> commitList;
     private final SimpleDateFormat dateFormat;
+    private final BranchColorManager colorManager;
 
     public CommitAdapter(List<JSONObject> commitList) {
         this.commitList = commitList;
         this.dateFormat = new SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault());
+        this.colorManager = null; // Will be initialized in onCreateViewHolder
     }
 
     public static class CommitViewHolder extends RecyclerView.ViewHolder {
@@ -61,9 +65,19 @@ public class CommitAdapter extends RecyclerView.Adapter<CommitAdapter.CommitView
             String repoName = commitData.optString("repo_name", "Unknown repo");
             holder.repoName.setText(repoName);
 
-            // Get branch name
+            // Get branch name and set color
             String branchName = commitData.optString("branch", "main");
             holder.branchName.setText(branchName);
+
+            // Set dynamic branch color
+            BranchColorManager colorManager = BranchColorManager.getInstance(holder.itemView.getContext());
+            int branchColor = colorManager.getColorForBranch(repoName, branchName);
+
+            // Update background color
+            GradientDrawable drawable = (GradientDrawable) holder.branchName.getBackground();
+            if (drawable != null) {
+                drawable.setColor(branchColor);
+            }
 
             // Get author
             JSONObject author = commit.optJSONObject("author");
