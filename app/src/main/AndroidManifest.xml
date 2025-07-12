@@ -14,32 +14,39 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gitofy"
         tools:targetApi="31">
-
-
+        <activity
+            android:name=".view.activities.FileDiffActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activities.CommitDetailActivity"
+            android:exported="false" />
         <activity android:name=".view.activities.RepoDEtailsActivity" />
-    <activity android:name=".view.activities.HomeActivity"
-        android:exported="true"
-        ></activity>
+        <activity
+            android:name=".view.activities.HomeActivity"
+            android:exported="true" />
         <activity
             android:name=".view.activities.PlatformSelectorActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activities.OAuthCallbackActivity"
+        <activity
+            android:name=".view.activities.OAuthCallbackActivity"
             android:exported="true">
             <intent-filter android:label="GitHub OAuth Callback">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="myapp"
-                    android:host="callback" />
+                    android:host="callback"
+                    android:scheme="myapp" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

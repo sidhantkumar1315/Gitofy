@@ -1,12 +1,15 @@
 package com.example.gitofy.view.adpaters;
 
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.gitofy.R;
+import com.example.gitofy.view.activities.CommitDetailActivity;
 import com.example.gitofy.view.util.BranchColorManager;
 import org.json.JSONObject;
 import java.text.SimpleDateFormat;
@@ -16,14 +19,13 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class CommitAdapter extends RecyclerView.Adapter<CommitAdapter.CommitViewHolder> {
+    private static final String TAG = "CommitAdapter";
     private final List<JSONObject> commitList;
     private final SimpleDateFormat dateFormat;
-    private final BranchColorManager colorManager;
 
     public CommitAdapter(List<JSONObject> commitList) {
         this.commitList = commitList;
         this.dateFormat = new SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault());
-        this.colorManager = null; // Will be initialized in onCreateViewHolder
     }
 
     public static class CommitViewHolder extends RecyclerView.ViewHolder {
@@ -54,6 +56,7 @@ public class CommitAdapter extends RecyclerView.Adapter<CommitAdapter.CommitView
             // Get commit info
             JSONObject commit = commitData.getJSONObject("commit");
             String message = commit.optString("message", "No message");
+            String fullMessage = message; // Store full message for detail view
 
             // Limit message to first line
             if (message.contains("\n")) {
@@ -81,18 +84,60 @@ public class CommitAdapter extends RecyclerView.Adapter<CommitAdapter.CommitView
 
             // Get author
             JSONObject author = commit.optJSONObject("author");
+            String authorName = "Unknown";
+            String commitDate = "";
+
             if (author != null) {
-                holder.commitAuthor.setText(author.optString("name", "Unknown"));
+                authorName = author.optString("name", "Unknown");
+                holder.commitAuthor.setText(authorName);
 
                 // Parse and format date
-                String dateStr = author.optString("date");
-                if (!dateStr.isEmpty()) {
-                    SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
-                    parser.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    Date date = parser.parse(dateStr);
-                    holder.commitTime.setText(dateFormat.format(date));
+                commitDate = author.optString("date", "");
+                if (!commitDate.isEmpty()) {
+                    try {
+                        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+                        parser.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        Date date = parser.parse(commitDate);
+                        holder.commitTime.setText(dateFormat.format(date));
+                    } catch (Exception e) {
+                        holder.commitTime.setText(commitDate);
+                    }
                 }
             }
+
+            // Store final values for click listener
+            final String finalAuthorName = authorName;
+            final String finalCommitDate = commitDate;
+            final String finalFullMessage = fullMessage;
+
+            // Add click listener for commit details
+            holder.itemView.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(v.getContext(), CommitDetailActivity.class);
+
+                    // Get the stored owner first
+                    String owner = commitData.optString("repo_owner", "");
+
+                    // If owner is not stored, try to extract from URL
+                    if (owner.isEmpty()) {
+                        String url = commitData.optString("url", "");
+                        owner = extractOwnerFromUrl(url);
+                    }
+
+                    String sha = commitData.optString("sha", "");
+
+                    intent.putExtra("repo_name", repoName);
+                    intent.putExtra("repo_owner", owner);
+                    intent.putExtra("commit_sha", sha);
+                    intent.putExtra("commit_message", finalFullMessage);
+                    intent.putExtra("author_name", finalAuthorName);
+                    intent.putExtra("commit_date", finalCommitDate);
+
+                    v.getContext().startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,5 +147,19 @@ public class CommitAdapter extends RecyclerView.Adapter<CommitAdapter.CommitView
     @Override
     public int getItemCount() {
         return commitList.size();
+    }
+
+    // Helper method to extract owner from URL
+    private String extractOwnerFromUrl(String url) {
+        // URL format: https://api.github.com/repos/OWNER/REPO/commits/SHA
+        try {
+            String[] parts = url.split("/");
+            if (parts.length > 4) {
+                return parts[4]; // The owner is the 5th element
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

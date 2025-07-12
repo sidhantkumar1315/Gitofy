@@ -1,21 +1,17 @@
 package com.example.gitofy.view.util;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class GitHubService {
+    private static final String TAG = "GitHubService";
     private final OkHttpClient client = new OkHttpClient();
 
     public interface UserCallback {
@@ -25,6 +21,16 @@ public class GitHubService {
 
     public interface ReposCallback {
         void onSuccess(JSONArray repos);
+        void onError(Exception e);
+    }
+
+    public interface CommitsCallback {
+        void onSuccess(List<JSONObject> commits);
+        void onError(Exception e);
+    }
+
+    public interface CommitDetailCallback {
+        void onSuccess(JSONObject commitDetail);
         void onError(Exception e);
     }
 
@@ -68,11 +74,6 @@ public class GitHubService {
         }).start();
     }
 
-    public interface CommitsCallback {
-        void onSuccess(List<JSONObject> commits);
-        void onError(Exception e);
-    }
-
     public void fetchRecentCommits(String token, CommitsCallback callback) {
         new Thread(() -> {
             try {
@@ -98,7 +99,6 @@ public class GitHubService {
 
                 String reposJson = reposResponse.body().string();
                 JSONArray repos = new JSONArray(reposJson);
-                Log.d(TAG, "Found " + repos.length() + " repositories");
 
                 // For each repo, get all branches and their commits
                 for (int i = 0; i < Math.min(5, repos.length()); i++) {
@@ -106,7 +106,12 @@ public class GitHubService {
                     String repoName = repo.getString("name");
                     String fullName = repo.getString("full_name");
 
-                    Log.d(TAG, "Processing repo: " + repoName);
+                    // Extract owner information
+                    String owner = "";
+                    if (repo.has("owner")) {
+                        JSONObject ownerObj = repo.getJSONObject("owner");
+                        owner = ownerObj.getString("login");
+                    }
 
                     // Get all branches for this repo
                     Request branchesRequest = new Request.Builder()
@@ -120,14 +125,12 @@ public class GitHubService {
                         if (branchesResponse.isSuccessful()) {
                             String branchesJson = branchesResponse.body().string();
                             JSONArray branches = new JSONArray(branchesJson);
-                            Log.d(TAG, "Found " + branches.length() + " branches for " + repoName);
 
                             // For each branch, get recent commits
                             for (int j = 0; j < branches.length(); j++) {
                                 JSONObject branch = branches.getJSONObject(j);
                                 String branchName = branch.getString("name");
 
-                                Log.d(TAG, "Fetching commits for branch: " + branchName + " in repo: " + repoName);
 
                                 // Get commits for this branch
                                 Request commitsRequest = new Request.Builder()
@@ -141,27 +144,24 @@ public class GitHubService {
                                     if (commitsResponse.isSuccessful()) {
                                         String commitsJson = commitsResponse.body().string();
                                         JSONArray commits = new JSONArray(commitsJson);
-                                        Log.d(TAG, "Found " + commits.length() + " commits for branch " + branchName);
 
                                         for (int k = 0; k < commits.length(); k++) {
                                             JSONObject commit = commits.getJSONObject(k);
-                                            // Add repo and branch info to commit object
+                                            // Add repo, branch, and owner info to commit object
                                             commit.put("repo_name", repoName);
                                             commit.put("branch", branchName);
+                                            commit.put("repo_owner", owner);
                                             allCommits.add(commit);
                                         }
                                     }
                                 } catch (Exception e) {
-                                    Log.e(TAG, "Error fetching commits for branch " + branchName, e);
                                 }
                             }
                         }
                     } catch (Exception e) {
-                        Log.e(TAG, "Error fetching branches for " + repoName, e);
                     }
                 }
 
-                Log.d(TAG, "Total commits collected: " + allCommits.size());
 
                 // Sort by date (newest first)
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -184,10 +184,35 @@ public class GitHubService {
                 callback.onSuccess(allCommits);
 
             } catch (Exception e) {
-                Log.e(TAG, "Error in fetchRecentCommits", e);
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    public void fetchCommitDetails(String token, String owner, String repo, String sha,
+                                   CommitDetailCallback callback) {
+        new Thread(() -> {
+            try {
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/" + owner + "/" + repo + "/commits/" + sha)
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to fetch commit details");
+                }
+
+                String json = response.body().string();
+                JSONObject commitDetail = new JSONObject(json);
+
+                callback.onSuccess(commitDetail);
+
+            } catch (Exception e) {
                 callback.onError(e);
             }
         }).start();
     }
 }
-
