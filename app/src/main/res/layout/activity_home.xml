@@ -65,15 +65,14 @@
                 android:id="@+id/icon_repos"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@android:drawable/ic_menu_save"
-                android:textColor="@color/colorPrimary" />
+                android:src="@android:drawable/ic_menu_save"/>
 
             <TextView
                 android:id="@+id/text_repos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Repositories"
-                android:textColor="@color/colorPrimary"
+                android:text="Repos"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -94,15 +93,14 @@
                 android:id="@+id/icon_recent"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@android:drawable/ic_menu_recent_history"
-                android:textColor="@color/colorPrimary" />
+                android:src="@android:drawable/ic_menu_recent_history" />
 
             <TextView
                 android:id="@+id/text_recent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recent Commits"
-                android:textColor="@color/colorPrimary"
+                android:text="Commits"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -123,15 +121,43 @@
                 android:id="@+id/icon_watched"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@android:drawable/btn_star_big_on"
-                android:textColor="@color/colorPrimary" />
+                android:src="@android:drawable/btn_star_big_on"/>
 
             <TextView
                 android:id="@+id/text_watched"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Watched"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_more"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/icon_more"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_more"
+                />
+
+            <TextView
+                android:id="@+id/text_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="More"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="12sp" />
 
         </LinearLayout>

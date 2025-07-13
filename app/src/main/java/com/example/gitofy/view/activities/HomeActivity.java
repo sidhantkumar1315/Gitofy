@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.example.gitofy.R;
+import com.example.gitofy.view.fragments.MoreFragment;
 import com.example.gitofy.view.fragments.RecentCommitsFragment;
 import com.example.gitofy.view.fragments.ReposFragment;
 import com.example.gitofy.view.fragments.WelcomeFragment;
@@ -19,7 +20,7 @@ import org.json.JSONObject;
 public class HomeActivity extends AppCompatActivity {
 
     private TextView userNameText;
-    private LinearLayout navRepos, navRecent, navWatched;
+    private LinearLayout navRepos, navRecent, navWatched, navMore;
     private LinearLayout currentSelected = null;
 
     @Override
@@ -31,6 +32,7 @@ public class HomeActivity extends AppCompatActivity {
         navRepos = findViewById(R.id.nav_repos);
         navRecent = findViewById(R.id.nav_recent);
         navWatched = findViewById(R.id.nav_watched);
+        navMore = findViewById(R.id.nav_more);
 
         setupBottomNavigation();
         loadUserInfo();
@@ -49,11 +51,17 @@ public class HomeActivity extends AppCompatActivity {
             selectNavItem(navRecent);
             loadFragment(new RecentCommitsFragment());
         });
-//
-//        navWatched.setOnClickListener(v -> {
-//            selectNavItem(navWatched);
-//            loadFragment(new WatchedCommitsFragment());
-//        });
+
+        navWatched.setOnClickListener(v -> {
+            selectNavItem(navWatched);
+            // TODO: Implement WatchedFragment
+            loadFragment(new WelcomeFragment());
+        });
+
+        navMore.setOnClickListener(v -> {
+            selectNavItem(navMore);
+            loadFragment(new MoreFragment());
+        });
     }
 
     private void selectNavItem(LinearLayout selected) {
@@ -61,6 +69,7 @@ public class HomeActivity extends AppCompatActivity {
         resetNavItem(navRepos);
         resetNavItem(navRecent);
         resetNavItem(navWatched);
+        resetNavItem(navMore);
 
         // Highlight selected item
         selected.setSelected(true);
