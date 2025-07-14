@@ -15,6 +15,15 @@
         android:theme="@style/Theme.Gitofy"
         tools:targetApi="31">
         <activity
+            android:name=".view.activities.IssueDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activities.CreateIssueActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activities.IssuesActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.activities.HeatmapActivity"
             android:exported="false" />
         <activity

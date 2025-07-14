@@ -516,4 +516,266 @@ public class GitHubService {
             callback.onSuccess(contributions, totalContributions);
         }
     }
+
+
+    public interface IssuesCallback {
+        void onSuccess(JSONArray issues);
+        void onError(Exception e);
+    }
+
+    public interface CreateIssueCallback {
+        void onSuccess(JSONObject issue);
+        void onError(Exception e);
+    }
+
+    public void fetchIssues(String token, String owner, String repo, IssuesCallback callback) {
+        new Thread(() -> {
+            try {
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/" + owner + "/" + repo + "/issues?state=all")
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to fetch issues: " + response.code());
+                }
+
+                JSONArray issues = new JSONArray(response.body().string());
+                callback.onSuccess(issues);
+
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    public void createIssue(String token, String owner, String repo, String title,
+                            String body, CreateIssueCallback callback) {
+        new Thread(() -> {
+            try {
+                JSONObject issueBody = new JSONObject();
+                issueBody.put("title", title);
+                issueBody.put("body", body);
+
+                okhttp3.MediaType JSON = okhttp3.MediaType.parse("application/json; charset=utf-8");
+                okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(JSON, issueBody.toString());
+
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/" + owner + "/" + repo + "/issues")
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .post(requestBody)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to create issue: " + response.code());
+                }
+
+                JSONObject createdIssue = new JSONObject(response.body().string());
+                callback.onSuccess(createdIssue);
+
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    // Add these methods to your existing GitHubService class
+
+    public interface LabelsCallback {
+        void onSuccess(JSONArray labels);
+        void onError(Exception e);
+    }
+
+    public interface AssigneesCallback {
+        void onSuccess(JSONArray assignees);
+        void onError(Exception e);
+    }
+
+    public interface MilestonesCallback {
+        void onSuccess(JSONArray milestones);
+        void onError(Exception e);
+    }
+
+    public void fetchLabels(String token, String owner, String repo, LabelsCallback callback) {
+        new Thread(() -> {
+            try {
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/" + owner + "/" + repo + "/labels")
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to fetch labels: " + response.code());
+                }
+
+                JSONArray labels = new JSONArray(response.body().string());
+                callback.onSuccess(labels);
+
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    public void fetchAssignees(String token, String owner, String repo, AssigneesCallback callback) {
+        new Thread(() -> {
+            try {
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/" + owner + "/" + repo + "/assignees")
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to fetch assignees: " + response.code());
+                }
+
+                JSONArray assignees = new JSONArray(response.body().string());
+                callback.onSuccess(assignees);
+
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    public void fetchMilestones(String token, String owner, String repo, MilestonesCallback callback) {
+        new Thread(() -> {
+            try {
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/" + owner + "/" + repo + "/milestones")
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to fetch milestones: " + response.code());
+                }
+
+                JSONArray milestones = new JSONArray(response.body().string());
+                callback.onSuccess(milestones);
+
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    public void createIssue(String token, String owner, String repo, String title,
+                            String body, List<String> assignees, List<String> labels,
+                            Integer milestone, CreateIssueCallback callback) {
+        new Thread(() -> {
+            try {
+                JSONObject issueBody = new JSONObject();
+                issueBody.put("title", title);
+                issueBody.put("body", body);
+
+                if (assignees != null && !assignees.isEmpty()) {
+                    JSONArray assigneesArray = new JSONArray(assignees);
+                    issueBody.put("assignees", assigneesArray);
+                }
+
+                if (labels != null && !labels.isEmpty()) {
+                    JSONArray labelsArray = new JSONArray(labels);
+                    issueBody.put("labels", labelsArray);
+                }
+
+                if (milestone != null) {
+                    issueBody.put("milestone", milestone);
+                }
+
+                okhttp3.MediaType JSON = okhttp3.MediaType.parse("application/json; charset=utf-8");
+                okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(JSON, issueBody.toString());
+
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/" + owner + "/" + repo + "/issues")
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .post(requestBody)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to create issue: " + response.code());
+                }
+
+                JSONObject createdIssue = new JSONObject(response.body().string());
+                callback.onSuccess(createdIssue);
+
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    public interface IssueDetailCallback {
+        void onSuccess(JSONObject issue);
+        void onError(Exception e);
+    }
+
+    public interface UpdateIssueCallback {
+        void onSuccess(JSONObject issue);
+        void onError(Exception e);
+    }
+
+    public void fetchIssueDetail(String token, String owner, String repo, int issueNumber, IssueDetailCallback callback) {
+        new Thread(() -> {
+            try {
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/" + owner + "/" + repo + "/issues/" + issueNumber)
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to fetch issue detail: " + response.code());
+                }
+
+                JSONObject issue = new JSONObject(response.body().string());
+                callback.onSuccess(issue);
+
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    public void updateIssueState(String token, String owner, String repo, int issueNumber, String state, UpdateIssueCallback callback) {
+        new Thread(() -> {
+            try {
+                JSONObject updateBody = new JSONObject();
+                updateBody.put("state", state);
+
+                okhttp3.MediaType JSON = okhttp3.MediaType.parse("application/json; charset=utf-8");
+                okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(JSON, updateBody.toString());
+
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/" + owner + "/" + repo + "/issues/" + issueNumber)
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .patch(requestBody)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to update issue: " + response.code());
+                }
+
+                JSONObject updatedIssue = new JSONObject(response.body().string());
+                callback.onSuccess(updatedIssue);
+
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
 }
