@@ -38,13 +38,28 @@
 
     </LinearLayout>
 
+    <!-- Truncated message warning -->
+    <TextView
+        android:id="@+id/truncatedMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="#FFF3CD"
+        android:textColor="#856404"
+        android:text="Full diff not available. File might be binary or too large to display."
+        android:visibility="gone"
+        android:textSize="14sp" />
+
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
             <TextView
                 android:id="@+id/diffTextView"
@@ -54,7 +69,8 @@
                 android:fontFamily="monospace"
                 android:textSize="12sp"
                 android:textColor="@android:color/black"
-                android:background="@android:color/white" />
+                android:background="@android:color/white"
+                android:textIsSelectable="true" />
 
         </ScrollView>
 

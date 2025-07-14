@@ -39,6 +39,8 @@ public class FileChangeAdapter extends RecyclerView.Adapter<FileChangeAdapter.Fi
         return new FileChangeViewHolder(view);
     }
 
+    // In FileChangeAdapter.java, update the onBindViewHolder method:
+
     @Override
     public void onBindViewHolder(FileChangeViewHolder holder, int position) {
         try {
@@ -48,10 +50,18 @@ public class FileChangeAdapter extends RecyclerView.Adapter<FileChangeAdapter.Fi
             String status = file.optString("status", "modified");
             int additions = file.optInt("additions", 0);
             int deletions = file.optInt("deletions", 0);
+            int changes = file.optInt("changes", 0);
+            String patch = file.optString("patch", "");
 
             holder.fileName.setText(filename);
             holder.fileStatus.setText(status.toUpperCase());
-            holder.changeStats.setText("+" + additions + " -" + deletions);
+
+            // Show total changes if very large
+            if (changes > 1000) {
+                holder.changeStats.setText("+" + additions + " -" + deletions + " (" + changes + " total)");
+            } else {
+                holder.changeStats.setText("+" + additions + " -" + deletions);
+            }
 
             // Set status color
             int color;
@@ -76,9 +86,17 @@ public class FileChangeAdapter extends RecyclerView.Adapter<FileChangeAdapter.Fi
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), FileDiffActivity.class);
                 intent.putExtra("file_name", filename);
-                intent.putExtra("patch", file.optString("patch", ""));
+                intent.putExtra("patch", patch);
                 intent.putExtra("additions", additions);
                 intent.putExtra("deletions", deletions);
+                intent.putExtra("status", status);
+                intent.putExtra("changes", changes);
+
+                // Add a flag if patch might be truncated
+                if (patch.isEmpty() && changes > 0) {
+                    intent.putExtra("patch_truncated", true);
+                }
+
                 v.getContext().startActivity(intent);
             });
 

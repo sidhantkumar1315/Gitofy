@@ -50,7 +50,37 @@
           <theme>@style/Theme.Gitofy</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_search.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_share.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_stats.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/issue_state_background.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/legend_item_background.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/rounded_background.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/search_background.xml">
         <config>
           <theme>@style/Theme.Gitofy</theme>
         </config>
@@ -70,6 +100,16 @@
           <theme>@style/Theme.Gitofy</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_compare.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_create_issue.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_file_diff.xml">
         <config>
           <theme>@style/Theme.Gitofy</theme>
@@ -85,6 +125,16 @@
           <theme>@style/Theme.Gitofy</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_issue_detail.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_issues.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
         <config>
           <theme>@style/Theme.Gitofy</theme>
@@ -96,6 +146,11 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_webview.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_commit_stats.xml">
         <config>
           <theme>@style/Theme.Gitofy</theme>
         </config>
@@ -135,6 +190,11 @@
           <theme>@style/Theme.Gitofy</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_issue.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_repo.xml">
         <config>
           <theme>@style/Theme.Gitofy</theme>
@@ -146,6 +206,11 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/spinner_item.xml">
+        <config>
+          <theme>@style/Theme.Gitofy</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/menu/menu_commit_detail.xml">
         <config>
           <theme>@style/Theme.Gitofy</theme>
         </config>
@@ -163,13 +228,16 @@
       <change beforePath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.11.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/gitofy/view/activities/HomeActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/gitofy/view/activities/HomeActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/gitofy/view/activities/CommitDetailActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/gitofy/view/activities/CommitDetailActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/gitofy/view/activities/FileDiffActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/gitofy/view/activities/FileDiffActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/gitofy/view/adpaters/FileChangeAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/gitofy/view/adpaters/FileChangeAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/gitofy/view/util/GitHubService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/gitofy/view/util/GitHubService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_home.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_home.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_commit_detail.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_commit_detail.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_file_diff.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_file_diff.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,8 +274,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
-        <option value="resourceFile" />
         <option value="layoutResourceFile" />
+        <option value="resourceFile" />
       </list>
     </option>
   </component>
@@ -243,6 +311,12 @@
 }</component>
   <component name="RecentsManager">
     <key name="android.template.1687533905">
+      <recent name="com.example.gitofy.view.activities" />
+    </key>
+    <key name="android.template.-461797843">
+      <recent name="com.example.gitofy.view.activities" />
+    </key>
+    <key name="android.template.312527797">
       <recent name="com.example.gitofy.view.activities" />
     </key>
   </component>
@@ -714,12 +788,12 @@
       <map>
         <entry key="com.example.gitofy">
           <value>
-            <CheckInfo lastCheckTimestamp="1752360851329" />
+            <CheckInfo lastCheckTimestamp="1752447455333" />
           </value>
         </entry>
         <entry key="com.example.gitofy.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1752360851329" />
+            <CheckInfo lastCheckTimestamp="1752447455345" />
           </value>
         </entry>
       </map>

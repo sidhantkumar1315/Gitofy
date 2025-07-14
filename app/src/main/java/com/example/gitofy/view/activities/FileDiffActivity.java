@@ -7,6 +7,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,22 +17,57 @@ public class FileDiffActivity extends AppCompatActivity {
 
     private TextView diffTextView;
     private TextView statsTextView;
+    private TextView truncatedMessageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_diff);
 
+        // Get intent extras
         String fileName = getIntent().getStringExtra("file_name");
         String patch = getIntent().getStringExtra("patch");
         int additions = getIntent().getIntExtra("additions", 0);
         int deletions = getIntent().getIntExtra("deletions", 0);
+        int changes = getIntent().getIntExtra("changes", 0);
+        boolean patchTruncated = getIntent().getBooleanExtra("patch_truncated", false);
+        String status = getIntent().getStringExtra("status");
 
         setupToolbar(fileName);
         initializeViews();
 
-        statsTextView.setText("+" + additions + " -" + deletions);
-        displayDiff(patch);
+        // Display stats
+        if (changes > 0 && changes != (additions + deletions)) {
+            statsTextView.setText("+" + additions + " -" + deletions + " (" + changes + " changes)");
+        } else {
+            statsTextView.setText("+" + additions + " -" + deletions);
+        }
+
+        // Check if patch is truncated or missing
+        if (patchTruncated || (patch == null || patch.isEmpty()) && changes > 0) {
+            truncatedMessageView.setVisibility(View.VISIBLE);
+
+            // Customize message based on status
+            String message;
+            if ("renamed".equals(status)) {
+                message = "File was renamed. Full diff not available.";
+            } else if (patch == null || patch.isEmpty()) {
+                message = "Full diff not available. File might be binary or too large to display.";
+            } else {
+                message = "Diff might be truncated due to size limitations.";
+            }
+            truncatedMessageView.setText(message);
+
+            // Still try to display whatever patch we have
+            if (patch != null && !patch.isEmpty()) {
+                displayDiff(patch);
+            } else {
+                diffTextView.setText("No preview available");
+            }
+        } else {
+            truncatedMessageView.setVisibility(View.GONE);
+            displayDiff(patch);
+        }
     }
 
     private void setupToolbar(String fileName) {
@@ -39,13 +75,14 @@ public class FileDiffActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(fileName);
+            getSupportActionBar().setTitle(fileName != null ? fileName : "File Diff");
         }
     }
 
     private void initializeViews() {
         diffTextView = findViewById(R.id.diffTextView);
         statsTextView = findViewById(R.id.statsTextView);
+        truncatedMessageView = findViewById(R.id.truncatedMessage);
     }
 
     private void displayDiff(String patch) {
@@ -75,6 +112,10 @@ public class FileDiffActivity extends AppCompatActivity {
             } else if (line.startsWith("@@")) {
                 // Line numbers - blue
                 spannableLine.setSpan(new ForegroundColorSpan(Color.parseColor("#0366D6")),
+                        0, line.length(), 0);
+            } else if (line.startsWith("diff --git")) {
+                // Diff header - bold
+                spannableLine.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
                         0, line.length(), 0);
             }
 

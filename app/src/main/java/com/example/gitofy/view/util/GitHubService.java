@@ -194,10 +194,13 @@ public class GitHubService {
         }).start();
     }
 
+    // In GitHubService.java, update the fetchCommitDetails method:
+
     public void fetchCommitDetails(String token, String owner, String repo, String sha,
                                    CommitDetailCallback callback) {
         new Thread(() -> {
             try {
+                // First, get the commit details
                 Request request = new Request.Builder()
                         .url("https://api.github.com/repos/" + owner + "/" + repo + "/commits/" + sha)
                         .header("Authorization", "token " + token)
@@ -213,7 +216,94 @@ public class GitHubService {
                 String json = response.body().string();
                 JSONObject commitDetail = new JSONObject(json);
 
-                callback.onSuccess(commitDetail);
+                // Check if we have all files
+                JSONArray files = commitDetail.optJSONArray("files");
+                int totalFiles = commitDetail.optJSONObject("stats").optInt("total", 0);
+
+                Log.d(TAG, "Initial files count: " + (files != null ? files.length() : 0) + ", Total expected: " + totalFiles);
+
+                // GitHub API limits files to 300 in the commit endpoint
+                // If there are more files or if files array is smaller than expected, fetch using compare API
+                if (files == null || files.length() < totalFiles || totalFiles > 300) {
+                    Log.d(TAG, "Fetching additional file details using compare API");
+                    fetchAllFilesUsingCompare(token, owner, repo, sha, commitDetail, callback);
+                } else {
+                    callback.onSuccess(commitDetail);
+                }
+
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    // Add this new method to fetch all files using the compare API
+    private void fetchAllFilesUsingCompare(String token, String owner, String repo, String sha,
+                                           JSONObject originalCommitDetail, CommitDetailCallback callback) {
+        try {
+            // Get the parent SHA
+            JSONArray parents = originalCommitDetail.optJSONArray("parents");
+            String baseSha = (parents != null && parents.length() > 0)
+                    ? parents.getJSONObject(0).getString("sha")
+                    : sha + "~1"; // Use parent notation if no parent found
+
+            // Use compare API to get all files
+            Request request = new Request.Builder()
+                    .url("https://api.github.com/repos/" + owner + "/" + repo +
+                            "/compare/" + baseSha + "..." + sha)
+                    .header("Authorization", "token " + token)
+                    .header("Accept", "application/vnd.github.v3+json")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+            if (response.isSuccessful()) {
+                JSONObject compareResult = new JSONObject(response.body().string());
+                JSONArray allFiles = compareResult.optJSONArray("files");
+
+                if (allFiles != null && allFiles.length() > 0) {
+                    // Replace the files array with the complete list
+                    originalCommitDetail.put("files", allFiles);
+                    Log.d(TAG, "Updated files count: " + allFiles.length());
+                }
+            } else {
+                Log.e(TAG, "Failed to fetch files using compare API: " + response.code());
+            }
+
+            callback.onSuccess(originalCommitDetail);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error in fetchAllFilesUsingCompare", e);
+            // Fall back to original commit detail
+            callback.onSuccess(originalCommitDetail);
+        }
+    }
+
+    // Also add a method to fetch file contents if patches are truncated
+    public interface FileContentCallback {
+        void onSuccess(String content);
+        void onError(Exception e);
+    }
+
+    public void fetchFileContent(String token, String owner, String repo, String path, String ref,
+                                 FileContentCallback callback) {
+        new Thread(() -> {
+            try {
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/" + owner + "/" + repo +
+                                "/contents/" + path + "?ref=" + ref)
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3.raw")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to fetch file content");
+                }
+
+                String content = response.body().string();
+                callback.onSuccess(content);
 
             } catch (Exception e) {
                 callback.onError(e);
@@ -772,6 +862,40 @@ public class GitHubService {
 
                 JSONObject updatedIssue = new JSONObject(response.body().string());
                 callback.onSuccess(updatedIssue);
+
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    // Add to GitHubService.java
+    public interface CompareCallback {
+        void onSuccess(JSONObject comparison);
+        void onError(Exception e);
+    }
+
+    public void compareCommits(String token, String owner, String repo,
+                               String base, String head, CompareCallback callback) {
+        new Thread(() -> {
+            try {
+                String url = "https://api.github.com/repos/" + owner + "/" + repo +
+                        "/compare/" + base + "..." + head;
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to compare commits: " + response.code());
+                }
+
+                JSONObject comparison = new JSONObject(response.body().string());
+                callback.onSuccess(comparison);
 
             } catch (Exception e) {
                 callback.onError(e);
