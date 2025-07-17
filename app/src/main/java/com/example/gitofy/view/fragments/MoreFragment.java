@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.example.gitofy.R;
 import com.example.gitofy.view.activities.HeatmapActivity;
 import com.example.gitofy.view.activities.IssuesActivity;
+import com.example.gitofy.view.activities.RepoStatsActivity;
 import com.example.gitofy.view.util.GitHubService;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,10 +54,10 @@ public class MoreFragment extends Fragment {
             Toast.makeText(getContext(), "Language Stats coming soon!", Toast.LENGTH_SHORT).show();
         });
 
-        // Filter Commits Card
-        CardView filterCommitsCard = view.findViewById(R.id.card_filter_commits);
-        filterCommitsCard.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Filter Commits coming soon!", Toast.LENGTH_SHORT).show();
+        CardView repoStatsCard = view.findViewById(R.id.card_filter_commits);
+        repoStatsCard.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), RepoStatsActivity.class);
+            startActivity(intent);
         });
 
         // Notifications Card

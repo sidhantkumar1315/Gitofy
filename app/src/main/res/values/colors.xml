@@ -14,4 +14,8 @@
     <color name="branch_color_8">#795548</color>
     <color name="branch_color_9">#607D8B</color>
     <color name="branch_color_10">#009688</color>
+    <color name="gold">#FFD700</color>
+    <color name="purple">#9C27B0</color>
+    <color name="green">#4CAF50</color>
+    <color name="backgroundColor">#F5F5F5</color>
 </resources>

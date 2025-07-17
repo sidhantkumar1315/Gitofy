@@ -1,4 +1,3 @@
-// Create CompareActivity.java
 package com.example.gitofy.view.activities;
 
 import android.content.Context;

@@ -148,19 +148,19 @@
                     android:gravity="center"
                     android:padding="16dp">
 
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_search"
-                        app:tint="@color/colorPrimary" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Repository Stats"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Filter Commits"
-                        android:textSize="14sp"
-                        android:textColor="@android:color/black"
-                        android:layout_marginTop="8dp" />
+                        android:text="View detailed statistics"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/darker_gray" />
 
                 </LinearLayout>
 

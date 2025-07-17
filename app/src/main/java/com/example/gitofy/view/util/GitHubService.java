@@ -7,12 +7,15 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -902,4 +905,212 @@ public class GitHubService {
             }
         }).start();
     }
+
+    public interface RepoStatsCallback {
+        void onSuccess(JSONArray repos, Map<String, Object> aggregateStats);
+        void onError(Exception e);
+    }
+
+    public void fetchRepoStats(String token, RepoStatsCallback callback) {
+        new Thread(() -> {
+            try {
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/user/repos?per_page=100&type=owner")
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) {
+                    throw new IOException("Failed to fetch repositories: " + response.code());
+                }
+
+                JSONArray repos = new JSONArray(response.body().string());
+
+                // Calculating aggregate statistics
+                Map<String, Object> aggregateStats = new HashMap<>();
+                int totalRepos = repos.length();
+                int totalStars = 0;
+                int totalForks = 0;
+                long totalSize = 0;
+
+                for (int i = 0; i < repos.length(); i++) {
+                    JSONObject repo = repos.getJSONObject(i);
+                    totalStars += repo.optInt("stargazers_count", 0);
+                    totalForks += repo.optInt("forks_count", 0);
+                    totalSize += repo.optLong("size", 0);
+                }
+
+                aggregateStats.put("totalRepos", totalRepos);
+                aggregateStats.put("totalStars", totalStars);
+                aggregateStats.put("totalForks", totalForks);
+                aggregateStats.put("totalSize", totalSize);
+
+                callback.onSuccess(repos, aggregateStats);
+
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
+
+    public void fetchRepoCommitActivity(String token, List<JSONObject> repos,
+                                        CommitActivityCallback callback) {
+        new Thread(() -> {
+            try {
+                Map<String, Integer> commitCountMap = new HashMap<>();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+                isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                // Get commits from the last 30 days
+                Calendar thirtyDaysAgo = Calendar.getInstance();
+                thirtyDaysAgo.add(Calendar.DAY_OF_MONTH, -30);
+
+                // Get current user info
+                Request userRequest = new Request.Builder()
+                        .url("https://api.github.com/user")
+                        .header("Authorization", "token " + token)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .build();
+
+                Response userResponse = client.newCall(userRequest).execute();
+                if (!userResponse.isSuccessful()) {
+                    callback.onError(new IOException("Failed to get user info"));
+                    return;
+                }
+
+                JSONObject user = new JSONObject(userResponse.body().string());
+                String username = user.getString("login");
+
+                boolean foundEventsData = false;
+                try {
+                    Request eventsRequest = new Request.Builder()
+                            .url("https://api.github.com/users/" + username + "/events?per_page=100")
+                            .header("Authorization", "token " + token)
+                            .header("Accept", "application/vnd.github.v3+json")
+                            .build();
+
+                    Response eventsResponse = client.newCall(eventsRequest).execute();
+                    if (eventsResponse.isSuccessful()) {
+                        JSONArray events = new JSONArray(eventsResponse.body().string());
+
+                        for (int i = 0; i < events.length(); i++) {
+                            JSONObject event = events.getJSONObject(i);
+                            String type = event.optString("type", "");
+
+                            if ("PushEvent".equals(type)) {
+                                String createdAt = event.optString("created_at", "");
+                                if (!createdAt.isEmpty()) {
+                                    Date eventDate = isoFormat.parse(createdAt);
+
+                                    if (eventDate.after(thirtyDaysAgo.getTime())) {
+                                        String date = dateFormat.format(eventDate);
+                                        JSONObject payload = event.optJSONObject("payload");
+                                        if (payload != null) {
+                                            JSONArray commits = payload.optJSONArray("commits");
+                                            int commitCount = commits != null ? commits.length() : 1;
+                                            commitCountMap.put(date,
+                                                    commitCountMap.getOrDefault(date, 0) + commitCount);
+                                            foundEventsData = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.w(TAG, "Events API failed, will fallback to repository scanning", e);
+                }
+
+                if (!foundEventsData || commitCountMap.isEmpty()) {
+                    Log.d(TAG, "No events data found, scanning repositories directly");
+
+                    // Sort repos by updated date to get most recently active ones
+                    Collections.sort(repos, (a, b) -> {
+                        String dateA = a.optString("updated_at", "");
+                        String dateB = b.optString("updated_at", "");
+                        return dateB.compareTo(dateA);
+                    });
+
+                    // Check repositories for commits
+                    int reposToCheck = Math.min(repos.size(), 20); // Check up to 20 repos
+                    Log.d(TAG, "Checking " + reposToCheck + " repositories for commits");
+
+                    for (int i = 0; i < reposToCheck; i++) {
+                        JSONObject repo = repos.get(i);
+                        String fullName = repo.getString("full_name");
+
+                        // Skip if repo was updated before our time window
+                        String updatedAt = repo.optString("updated_at", "");
+                        if (!updatedAt.isEmpty()) {
+                            try {
+                                Date updateDate = isoFormat.parse(updatedAt);
+                                if (updateDate.before(thirtyDaysAgo.getTime())) {
+                                    Log.d(TAG, "Skipping " + fullName + " - not updated recently");
+                                    continue;
+                                }
+                            } catch (Exception e) {
+                                // Continue anyway if date parsing fails
+                            }
+                        }
+
+                        // Get commits for this specific user from this repo
+                        Request commitsRequest = new Request.Builder()
+                                .url("https://api.github.com/repos/" + fullName +
+                                        "/commits?author=" + username +
+                                        "&since=" + isoFormat.format(thirtyDaysAgo.getTime()) +
+                                        "&per_page=100")
+                                .header("Authorization", "token " + token)
+                                .header("Accept", "application/vnd.github.v3+json")
+                                .build();
+
+                        try {
+                            Response commitsResponse = client.newCall(commitsRequest).execute();
+                            if (commitsResponse.isSuccessful()) {
+                                JSONArray commits = new JSONArray(commitsResponse.body().string());
+                                Log.d(TAG, "Found " + commits.length() + " commits in " + fullName);
+
+                                for (int j = 0; j < commits.length(); j++) {
+                                    JSONObject commit = commits.getJSONObject(j);
+                                    JSONObject commitData = commit.getJSONObject("commit");
+                                    JSONObject author = commitData.getJSONObject("author");
+
+                                    // Verify it's by the current user (double-check)
+                                    String authorEmail = author.optString("email", "");
+                                    String authorName = author.optString("name", "");
+
+                                    String dateStr = author.getString("date");
+                                    Date commitDate = isoFormat.parse(dateStr);
+                                    String date = dateFormat.format(commitDate);
+
+                                    commitCountMap.put(date,
+                                            commitCountMap.getOrDefault(date, 0) + 1);
+                                }
+                            } else {
+                                Log.w(TAG, "Failed to fetch commits for " + fullName + ": " + commitsResponse.code());
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error fetching commits for repo: " + fullName, e);
+                        }
+                    }
+                }
+
+
+                int totalCommits = 0;
+                for (Map.Entry<String, Integer> entry : commitCountMap.entrySet()) {
+                    totalCommits += entry.getValue();
+                    Log.d(TAG, "Date: " + entry.getKey() + ", Commits: " + entry.getValue());
+                }
+                Log.d(TAG, "Total commits in period: " + totalCommits);
+
+                callback.onSuccess(commitCountMap);
+
+            } catch (Exception e) {
+                Log.e(TAG, "Error in fetchRepoCommitActivity", e);
+                callback.onError(e);
+            }
+        }).start();
+    }
+
 }
