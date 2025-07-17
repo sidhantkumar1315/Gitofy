@@ -1,65 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipeRefreshLayout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <!-- Search Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/searchCard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp">
 
-        <!-- Branch Legend with Gradient Overlays -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <EditText
+                android:id="@+id/searchEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Search commits messages"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:background="@android:color/transparent"
+                android:padding="8dp" />
+
+            <ImageButton
+                android:id="@+id/clearSearchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Branch Legend Card -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp">
+
+        <HorizontalScrollView
+            android:id="@+id/branchLegend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/legendContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp" />
+
+        </HorizontalScrollView>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Your existing SwipeRefreshLayout -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="#F5F5F5">
-
-            <HorizontalScrollView
-                android:id="@+id/branchLegend"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:clipToPadding="false">
-
-                <LinearLayout
-                    android:id="@+id/legendContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:paddingStart="24dp"
-                    android:paddingEnd="24dp" />
-
-            </HorizontalScrollView>
-
-            <!-- Left Gradient Overlay -->
-            <View
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/gradient_left"
-                android:layout_gravity="start" />
-
-            <!-- Right Gradient Overlay -->
-            <View
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/gradient_right"
-                android:layout_gravity="end" />
-
-        </FrameLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#E0E0E0" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/commitRecyclerView"
@@ -70,20 +89,19 @@
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_gravity="center"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/emptyView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_gravity="center"
                 android:text="No commits found"
                 android:textSize="16sp"
                 android:visibility="gone" />
 
-        </RelativeLayout>
+        </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    </LinearLayout>
-
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>
